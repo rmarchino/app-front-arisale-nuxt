@@ -105,6 +105,7 @@
           </v-card>
         </v-col>
       </v-row>
+
       <!-- Tabla -->
       <v-row>
         <v-col>
@@ -301,7 +302,7 @@ export default {
   },
   head() {
       return {
-        title: "Aplication Nuxt  App || Home",
+        title: "Aplication Nuxt  App | Home",
         meta: [
           {
             hid: "name",

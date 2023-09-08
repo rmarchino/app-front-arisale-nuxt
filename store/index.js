@@ -3,10 +3,10 @@ import { Date } from "core-js";
 // State de vuex: variables, data
 export const state = () => ({
   searchData: {
-    idCompany: 'a897fff7944e4b0a9a1014682a79933e',
     idDevice: 'P212199C00051',
+    idCompany: 'a897fff7944e4b0a9a1014682a79933e',
     startDate: '2023-09-01',
-    endDate: '2023-09-04',
+    endDate: '2023-09-08',
   },
   items: [],
   selectedTab: 2,
@@ -34,7 +34,7 @@ export const mutations = {
   setItems(state, items) {
 
     // console.log('state', state)
-    // console.log('items', items)
+    console.log(items)
 
     if (Array.isArray(items)) {
       state.items = items.map(item => ({
