@@ -46,79 +46,84 @@
                   <h3><span>Company Document Identity Number</span></h3>
                   <p class="card__text">{{ item.companyDocumentIdentityNumber }}</p>
                 </div>
-              </v-card> <!-- End-->
+              </v-card>
 
               <!-- Device and Local -->
-              <v-card class="card__container-grid">
-                <div>
-                  <h1 class="card__title">Device</h1>
-                  <div class="card__device">
-                    <div>
-                      <h3><span>Device Name</span></h3>
-                      <p class="card__text">{{ item.deviceName }}</p>
+              <div class="card__container-device-local">
+                <v-card class="card__container overflow-x-auto">
+                  <div>
+                    <h1 class="card__title">Device</h1>
+                    <div class="card__device">
+                      <div>
+                        <h3><span>Device Name</span></h3>
+                        <p class="card__text">{{ item.deviceName }}</p>
+                      </div>
                     </div>
                   </div>
+                </v-card> 
+                <v-card class="card__container overflow-x-auto">
+                  <div>
+                    <h1 class="card__title">Local</h1>
+                    <div class="card__local">
+                      <div>
+                        <h3><span>Id Establishment</span></h3>
+                        <p class="card__text">{{ item.idEstablishment }}</p>
+                      </div>
+                      <div>
+                        <h3><span>Establishment Name</span></h3>
+                        <p class="card__text">{{ item.establishmentName }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </v-card>
+              </div> 
+
+              <!-- Request Header and Reqest Body -->
+              <v-card class="card__container-body-header">
+                <h1 class="card__title">Request Body and Request Header</h1>
+                <div v-show="parsedRequestBody">
+                  <h3><span>Request Body</span></h3>
+                  <tree-view class="texto" :data="parsedRequestBody"></tree-view>
                 </div>
-                <div>
-                  <h1 class="card__title">Local</h1>
-                  <div class="card__local">
-                    <div>
-                      <h3><span>Id Establishment</span></h3>
-                      <p class="card__text">{{ item.idEstablishment }}</p>
-                    </div>
-                    <div>
-                      <h3><span>Establishment Name</span></h3>
-                      <p class="card__text">{{ item.establishmentName }}</p>
-                    </div>
-                  </div>
+                <div v-show="parsedRequestHeader">
+                  <h3><span>Request Header</span></h3>
+                  <tree-view class="texto" :data="parsedRequestHeader"></tree-view>
                 </div>
               </v-card> <!-- End -->
 
-              <!-- Request and Response -->
-              <v-card class="card__container-grid">
-                <div>
-                  <h1 class="card__title">Request</h1>
-                    <div v-show="parsedRequestBody">
-                      <h3><span>Request Body</span></h3>
-                      <tree-view class="texto" :data="parsedRequestBody"></tree-view>
-                    </div>
-                    <div v-show="parsedRequestHeader">
-                      <h3><span>Request Header</span></h3>
-                      <tree-view class="texto" :data="parsedRequestHeader"></tree-view>
-                    </div>
-                </div>
-              </v-card> <!-- End -->
-  
-
-
-
-              <v-list class="card-list">
-                
-                <div>
-                    <v-list-item-title class="mt-3 card-title">Device Name</v-list-item-title>
-                    <v-list-item-subtitle class="card-subtitle">{{ item.deviceName }}</v-list-item-subtitle>
-                </div>
-                <div>
-                    <v-list-item-title class="mt-3 card-title">Id App</v-list-item-title>
-                    <v-list-item-subtitle class="card-subtitle">{{ item.idApp }}</v-list-item-subtitle>
-                </div>
-                <div>
-                    <v-list-item-title class="mt-3 card-title">Id Channel</v-list-item-title>
-                    <v-list-item-subtitle class="card-subtitle">{{ item.idChannel }}</v-list-item-subtitle>
-                </div>
-                <div>
-                    <v-list-item-title class="mt-3 card-title">Version Code</v-list-item-title>
-                    <v-list-item-subtitle class="card-subtitle">{{ item.versionCode }}</v-list-item-subtitle>
-                </div>
+              <!-- Response Header and Response Body -->
+              <v-card class="card__container-body-header">
+                <h1 class="card__title">Response Header and Response Body</h1>
                 <div v-show="parsedResponseHeader">
-                  <h3>Response Header</h3>
-                  <tree-view :data="parsedResponseHeader" ></tree-view>
+                  <h3><span>Response Header</span></h3>
+                  <tree-view class="texto" :data="parsedResponseHeader"></tree-view>
                 </div>
                 <div v-show="parsedResponseBody">
-                  <h3>Response Body</h3>
-                  <tree-view :data="parsedResponseBody" ></tree-view>
+                  <h3><span>Response Body</span></h3>
+                  <tree-view class="texto" :data="parsedResponseBody" ></tree-view>
                 </div>
-              </v-list>
+              </v-card>
+
+              <!-- Aplication -->
+              <v-card class="card__application overflow-x-auto">
+                <h1 class="card__title">Application</h1>
+                <div>
+                  <h3><span>Id App</span></h3>
+                  <p class="card__text">{{ item.idApp }}</p>
+                </div>
+                <div>
+                  <h3><span>Id Channel</span></h3>
+                  <p class="card__text">{{ item.idChannel }}</p>
+                </div>
+                <div>
+                  <h3><span>Versión Code</span></h3>
+                  <p class="card__text">{{ item.versionCode }}</p>
+                </div>
+                <div>
+                  <h3><span>Versión Name</span></h3>
+                  <p class="card__text">{{ item.versionName }}</p>
+                </div>
+              </v-card>
             </v-list-item-content>
           </v-list-item>
         </v-card>
@@ -226,7 +231,7 @@ export default {
 }
 .card__title{
   color: #1a6fe6;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 5px;
@@ -234,29 +239,45 @@ export default {
 
 h3 {
   color: #34383c;
-  font-size: 16px;
+  font-size: 14px;
 }
 .card__text{
   color: #34383c;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 /** SectioN Device AND LOCAL**/
-.card__container-grid {
+.card__container {
+  background-color: #ebebeb;
   padding: 1rem;
-  background: #ebebeb;
+
+}
+.card__container-device-local {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  column-gap: 5px;
 }
 
 /** SectioN Request AND Response **/
-.texto {
-  color: #34383c !important;
+.card__container-body-header {
+  background: #ebebeb;
+  padding: 1rem;
+}
+
+/**Aplication **/
+.card__application {
+  background: #ebebeb;
+  padding: 1rem;
 }
 
 
 
 
+
+
+.texto {
+  color: #34383c !important;
+}
 
 
 
