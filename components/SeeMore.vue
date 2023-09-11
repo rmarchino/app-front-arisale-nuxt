@@ -35,6 +35,10 @@
               <v-card class="card__company">
                 <h1 class="card__title">Company</h1>
                 <div>
+                  <h3><span>Company Id</span></h3>
+                  <p class="card__text">{{ item.idCompany }}</p>
+                </div>
+                <div>
                   <h3><span>Company Business Name</span></h3>
                   <p class="card__text">{{ item.companyBusinessName }}</p>
                 </div>
@@ -54,6 +58,10 @@
                   <div>
                     <h1 class="card__title">Device</h1>
                     <div class="card__device">
+                      <div>
+                        <h3><span>Device Id</span></h3>
+                        <p class="card__text">{{ item.idDevice }}</p>
+                      </div>
                       <div>
                         <h3><span>Device Name</span></h3>
                         <p class="card__text">{{ item.deviceName }}</p>
@@ -81,19 +89,47 @@
               <!-- Request Header and Reqest Body -->
               <v-card class="card__container-body-header">
                 <h1 class="card__title">Request Body and Request Header</h1>
-                <div v-show="parsedRequestBody">
-                  <h3><span>Request Body</span></h3>
-                  <tree-view class="texto" :data="parsedRequestBody"></tree-view>
+                <div>
+                  <h3><span>Endpoint</span></h3>
+                  <p class="texto">{{ item.endpoint }}</p>
+                </div>
+                <div>
+                  <h3><span>Method</span></h3>
+                  <p class="texto">{{ item.method }}</p>
+                </div>
+                <div>
+                  <h3><span>Duration</span></h3>
+                  <p class="card__text">{{ item.duration  | formatDuration }}</p>
+                </div>
+                <div>
+                  <h3><span>IssueDate</span></h3>
+                  <p class="card__text">{{ item.issueDate | formatIssueDate }}</p>
+                </div>
+                <div>
+                  <h3><span>StartDate</span></h3>
+                  <p class="card__text">{{ item.startDate | formatStartDate }}</p>
+                </div>
+                <div>
+                  <h3><span>EndDate</span></h3>
+                  <p class="card__text">{{ item.endDate | formatEndDate }}</p>
                 </div>
                 <div v-show="parsedRequestHeader">
                   <h3><span>Request Header</span></h3>
                   <tree-view class="texto" :data="parsedRequestHeader"></tree-view>
+                </div>
+                <div v-show="parsedRequestBody">
+                  <h3><span>Request Body</span></h3>
+                  <tree-view class="texto" :data="parsedRequestBody"></tree-view>
                 </div>
               </v-card> <!-- End -->
 
               <!-- Response Header and Response Body -->
               <v-card class="card__container-body-header">
                 <h1 class="card__title">Response Header and Response Body</h1>
+                <div v-show="item.responseCode">
+                  <h3><span>Response Code</span></h3>
+                  <p class="card__text">{{ item.responseCode }}</p>
+                </div>
                 <div v-show="parsedResponseHeader">
                   <h3><span>Response Header</span></h3>
                   <tree-view class="texto" :data="parsedResponseHeader"></tree-view>
@@ -135,6 +171,8 @@
 <script>
 import Vue from "vue";
 import TreeView from "vue-json-tree-view"
+import { format } from 'date-fns';
+
 Vue.use(TreeView)
 
 export default {
@@ -150,6 +188,25 @@ export default {
         parsedResponseBody: null,
       }
     },
+    filters: {
+    formatStartDate(value) {
+      if(!value) return '';
+        return format((value), 'dd/MM/yyyy HH:mm:ss.SSS');
+    },
+    formatEndDate(value){
+      if(!value) return '';
+      return format((value), 'dd/MM/yyyy HH:mm:ss.SSS')
+    },
+    formatDuration(value){
+      if(!value) return '';
+      return (value / 1000) + 'seg'
+    },
+    formatIssueDate(value) {
+      if(!value) return '';
+      return format((value), 'dd/MM/yyyy HH:mm:ss.SSS');
+    }
+  },
+
     methods: {
       parseRequestBody() {
         if(typeof this.item.requestBody === 'string' && this.item.requestBody.trim() !== ''){
@@ -242,7 +299,7 @@ h3 {
   font-size: 14px;
 }
 .card__text{
-  color: #34383c;
+  color: #34383c !important;
   font-size: 12px;
 }
 
@@ -270,16 +327,9 @@ h3 {
   padding: 1rem;
 }
 
-
-
-
-
-
 .texto {
   color: #34383c !important;
 }
-
-
 
 .card-container {
   background: #cacaca !important;
@@ -288,16 +338,6 @@ h3 {
   font-size: 15px;
   color: #ffffff;
   font-weight: 700;
-}
-
-.card-subtitle {
-  color: #34383c !important;
-}
-
-.card-list {
-  background: #9b9a9a !important;
-  padding: 1rem;
-  border-radius: .50rem;
 }
 
 </style>

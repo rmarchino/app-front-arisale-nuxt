@@ -89,6 +89,17 @@
                   </v-date-picker>
                 </v-menu>
               </v-col>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="endpoint"
+                    label="Endpoit"
+                    outlined
+                    clearable
+                    color="white"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
             </v-row>
             <v-row>
               <v-col class="button__search">
@@ -137,8 +148,8 @@
                             <td class="custom-cell">{{ props.item.method }}</td>
                             <td class="custom-cell">{{ props.item.responseCode }}</td>
                             <td class="custom-cell">{{ props.item.versionName }}</td>
-                            <td class="custom-cell">{{ props.item.startDate | formatDate}}</td>
-                            <td class="custom-cell">{{ props.item.endDate | formatDate}}</td>
+                            <td class="custom-cell">{{ props.item.startDate | formatStartDate}}</td>
+                            <td class="custom-cell">{{ props.item.endDate | formatEndDate}}</td>
                             <td class="custom-cell">
                               <SeeMore 
                                 :item="props.item"
@@ -153,6 +164,11 @@
                     <v-col cols="12" class="container__button-flex">
                       <v-btn color="indigo" class="button__prebious" @click="previousPage">Previous</v-btn>
                       <v-btn color="indigo" class="button__next" @click="nextPage">Next</v-btn>
+                      <v-select
+                        v-model="perPage"
+                        :items="[7, 10, 25, 50, 100]"
+                        label="Elementos por página"
+                      ></v-select>
                     </v-col>
                   </v-row>
                 </v-card>
@@ -210,9 +226,13 @@ export default {
   },
 
   filters: {
-    formatDate(value) {
+    formatStartDate(value) {
       if(!value) return '';
         return format((value), 'dd/MM/yyyy HH:mm:ss.SSS');
+    },
+    formatEndDate(value){
+      if(!value) return '';
+      return format((value), 'dd/MM/yyyy HH:mm:ss.SSS')
     },
     formatDuration(value){
       if(!value) return '';
@@ -226,7 +246,7 @@ export default {
 
   computed: {
     ...mapGetters(['isSearchDataComplete']),
-    ...mapState(['items', 'state']),
+    ...mapState(['items', 'state', 'perPage']),
  
     idCompany: {
       set(val) {
@@ -263,7 +283,22 @@ export default {
         return this.$store.state.searchData.endDate
       },
     },
-
+    endpoint: {
+      set(val) {
+        this.$store.commit('setEndpoint', val)
+      },
+      get() {
+        return this.$store.state.searchData.endpoint
+      }
+    },
+    perPage: {
+        get() {
+          return this.$store.state.perPage
+        },
+        set(val){
+          this.$store.commit('setPerPage', val)
+        }
+    },
     selectedTab: {
       set(val) {
         this.$store.commit('setSelectedTab', val)
@@ -292,7 +327,9 @@ export default {
 
     async search() {
       try {
-        await this.$store.dispatch('searchData')
+        const additionalParams = {}
+        // const perPage = 10;
+        await this.$store.dispatch('searchData', {additionalParams});
       } catch (error) {
         console.error('Error al obtener datos:', error);
       } finally {

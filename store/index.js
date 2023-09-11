@@ -1,10 +1,10 @@
-import { Date } from "core-js";
 
 // State de vuex: variables, data
 export const state = () => ({
   searchData: {
-    idDevice: 'P212199C00051',
-    idCompany: 'a897fff7944e4b0a9a1014682a79933e',
+    idDevice: '22B3FD8X5783',
+    idCompany: '584e4b31b5be49e79527f448d224647e',
+    endpoint: '',
     startDate: '2023-09-01',
     endDate: '2023-09-08',
   },
@@ -12,6 +12,8 @@ export const state = () => ({
   selectedTab: 2,
   afterId: null,
   beforeId: null,
+  perPage: 7,
+  docsCount: null,
 });
 
 // Setters
@@ -28,19 +30,25 @@ export const mutations = {
   setEndDate(state, endDate) {
     state.searchData.endDate = endDate;
   },
+  setEndpoint(state, endpoint){
+    state.searchData.endpoint = endpoint;
+  },
+  setPerPage(state, perPage){
+    state.perPage = perPage
+  },
   setSelectedTab(state, selectedTab) {
     state.selectedTab = selectedTab
   },
   setItems(state, items) {
 
-    // console.log('state', state)
-    console.log(items)
+    console.log('state', state)
+    // console.log(items)
 
     if (Array.isArray(items)) {
       state.items = items.map(item => ({
         ...item,
         startDate: item.startDate ? new Date(item.startDate) : '',
-        endDate: item.endDate ? new Date(item.endDate) : '',    // new Date(item.issueDate)
+        endDate: item.endDate ? new Date(item.endDate) : '',
       }));
     } else {
       state.items = [];
@@ -64,20 +72,20 @@ export const getters = {
       !!state.searchData.idCompany &&
       !!state.searchData.idDevice &&
       !!state.searchData.startDate &&
-      !!state.searchData.endDate
+      !!state.searchData.endDate 
     )
   }
 };
 
 // Logic
 export const actions = {
-  async searchData({ state, commit, getters }, additionalParams) {
-     const { idCompany, idDevice, startDate, endDate } = state.searchData
+  async searchData({ state, commit, getters }, {additionalParams, perPage}) {
+     const { idCompany, idDevice, startDate, endDate, endpoint } = state.searchData
 
     commit('setItems')
 
     if (getters.isSearchDataComplete) {
-      let url = 'https://core.dev.arisale.com.pe/log-service/api/'
+      let url = 'https://core.arisale.com.pe/log-service/api/'
 
       switch (state.selectedTab) {
         case 0:
@@ -92,17 +100,21 @@ export const actions = {
       }
 
       // Agregar los parámetros de paginación a la solicitud
+      // console.log(startDate, typeof startDate)
+      
       const resultado = await this.$axios.$get(url, {
         params: {
           companyId: idCompany,
           deviceId: idDevice,
-          startDate: startDate , 
-          endDate: endDate,
+          startDate: new Date(startDate).valueOf(),
+          endDate: new Date(endDate).valueOf(),
+          endpoint: endpoint,
+          limit: state.perPage,
           ...additionalParams,
         }
         
       });
-      // console.log(resultado.data);
+      console.log(resultado.data);
 
       commit('setItems', resultado.data);
       commit('setAfterId', resultado.afterId);
