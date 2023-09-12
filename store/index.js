@@ -2,18 +2,18 @@
 // State de vuex: variables, data
 export const state = () => ({
   searchData: {
-    idDevice: '22B3FD8X5783',
-    idCompany: '584e4b31b5be49e79527f448d224647e',
+    idCompany: 'bbca1a68da3f4a2cb6e09d8fd6a69e4e',
+    idDevice: '6c101760',
     endpoint: '',
-    startDate: '2023-09-01',
-    endDate: '2023-09-08',
+    startDate: '2023-09-08',
+    endDate: '2023-09-12',
   },
   items: [],
   selectedTab: 2,
   afterId: null,
   beforeId: null,
   perPage: 7,
-  docsCount: null,
+  docsCount: null,  // Cantidad total de documentos
 });
 
 // Setters
@@ -33,15 +33,17 @@ export const mutations = {
   setEndpoint(state, endpoint){
     state.searchData.endpoint = endpoint;
   },
-  setPerPage(state, perPage){
-    state.perPage = perPage
+  setPerPage(state, perPage) {
+    state.perPage = perPage;
+  },
+  setDocsCount(state, docsCount){
+    state.docsCount = docsCount;
   },
   setSelectedTab(state, selectedTab) {
     state.selectedTab = selectedTab
   },
   setItems(state, items) {
-
-    console.log('state', state)
+    // console.log('state', state)
     // console.log(items)
 
     if (Array.isArray(items)) {
@@ -59,9 +61,6 @@ export const mutations = {
   },
   setBeforeId(state, beforeId) {
     state.beforeId = beforeId
-  },
-  setTotalItems(state, totalItems) {
-    state.totalItems = totalItems
   }
 };
 
@@ -77,15 +76,15 @@ export const getters = {
   }
 };
 
-// Logic
+// Logic d
 export const actions = {
-  async searchData({ state, commit, getters }, {additionalParams, perPage}) {
+  async searchData({ state, commit, getters }, additionalParams) {
      const { idCompany, idDevice, startDate, endDate, endpoint } = state.searchData
 
     commit('setItems')
 
     if (getters.isSearchDataComplete) {
-      let url = 'https://core.arisale.com.pe/log-service/api/'
+      let url = 'https://core.dev.arisale.com.pe/log-service/api/'
 
       switch (state.selectedTab) {
         case 0:
@@ -113,8 +112,12 @@ export const actions = {
           ...additionalParams,
         }
         
+        
       });
-      console.log(resultado.data);
+      // console.log(resultado.data);
+
+      // Almacenar la cantidad total de documentos
+      commit('setDocsCount', resultado.docsCount);
 
       commit('setItems', resultado.data);
       commit('setAfterId', resultado.afterId);
@@ -132,6 +135,10 @@ export const actions = {
     await dispatch('searchData', {
       beforeId: state.beforeId,
     });
+  },
+  async changePerPage({ commit, dispatch }, perPage) {
+    commit('setPerPage', perPage);
+    await dispatch('searchData');
   }
 };
 

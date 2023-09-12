@@ -41,7 +41,7 @@
                     v-on="on"
                   ></v-text-field>
                 </template>
-                <v-date-picker v-model="startDate" no-title scrollable color="light-blue lighten-1">
+                <v-date-picker v-model="startDate" range no-title scrollable color="light-blue lighten-1">
                   <v-btn
                     color="light-blue lighten-1"
                     @click="saveStartDate"
@@ -127,6 +127,9 @@
                 <v-card> {{ tab.name }} </v-card>
               </v-tab>
             </v-tabs>
+            <!-- <div v-for="item in items" :key="item.id">
+              <h2>{{ item.id }}</h2>
+            </div> -->
             <v-tabs-items v-model="selectedTab">
               <v-tab-item v-for="(tab, index) in tabs" :key="index">
                 <v-card>
@@ -136,8 +139,9 @@
                         :headers="headers"
                         :items="items"
                         :loading="loading"
-                        hide-default-footer
+                        disable-pagination
                         class="elevation-1"
+                        hide-default-footer
                       >
                         <template v-slot:item="props">
                           <tr class="custom-row">
@@ -166,9 +170,12 @@
                       <v-btn color="indigo" class="button__next" @click="nextPage">Next</v-btn>
                       <v-select
                         v-model="perPage"
-                        :items="[7, 10, 25, 50, 100]"
+                        :items="[7, 10, 15, 25]"
                         label="Elementos por página"
+                        @input="changePerPage"
+                        class="element__pagination"
                       ></v-select>
+                      <div>Total de documentos: {{ docsCount }}</div>
                     </v-col>
                   </v-row>
                 </v-card>
@@ -221,7 +228,6 @@ export default {
           name: 'Web Services',
         },
       ],
-      
     }
   },
 
@@ -246,7 +252,7 @@ export default {
 
   computed: {
     ...mapGetters(['isSearchDataComplete']),
-    ...mapState(['items', 'state', 'perPage']),
+    ...mapState(['items', 'state', 'perPage', 'docsCount']),
  
     idCompany: {
       set(val) {
@@ -310,7 +316,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['nextPage', 'previousPage']),
+    ...mapActions(['nextPage', 'previousPage', 'changePerPage']),
 
     cancelStartDate() {
       this.startDateMenu = false
@@ -324,14 +330,22 @@ export default {
     saveEndDate() {
       this.endDateMenu = false;
     },
+    async changePerPage() {
+      try {
+        await this.$store.dispatch('changePerPage', this.perPage);
+
+      } catch (error) {
+        console.log('Error al cambiar la cantidad de elementos por página:', error)
+      }
+    },
 
     async search() {
       try {
-        const additionalParams = {}
-        // const perPage = 10;
-        await this.$store.dispatch('searchData', {additionalParams});
+        await this.$store.dispatch('searchData');
+
       } catch (error) {
         console.error('Error al obtener datos:', error);
+        
       } finally {
         this.loading = false;
       }
@@ -351,7 +365,7 @@ export default {
           lang: "en"
         }
       }
-    }
+  }
 }
 </script>
 
@@ -385,6 +399,10 @@ export default {
 .button__prebious,
 .button__next {
   font-size: small !important;
+}
+
+.element__pagination{
+  padding: 5px;
 }
 </style>
 
