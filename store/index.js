@@ -1,8 +1,8 @@
 // State de vuex: variables, data
 export const state = () => ({
   searchData: {
-    idCompany: 'bbca1a68da3f4a2cb6e09d8fd6a69e4e',
-    idDevice: '6c101760',
+    idCompany: '98b43c9172d84980abd7e46a672d5e32',
+    idDevice: 'S202D89F70120',
     endpoint: '',
     dateRange: [''],
   },
@@ -11,7 +11,7 @@ export const state = () => ({
   afterId: null,
   beforeId: null,
   perPage: 7,
-  docsCount: null, // Cantidad total de documentos
+  docsCount: null,
 });
 
 // Setters
@@ -103,6 +103,8 @@ export const actions = {
           ...additionalParams,
         },
       });
+
+      // console.log(resultado.data);
 
       commit('setDocsCount', resultado.docsCount);
       commit('setItems', resultado.data);

@@ -82,7 +82,6 @@
           </v-card>
         </v-col>
       </v-row>
-
       <!-- Tabla -->
       <v-row>
         <v-col>
@@ -133,7 +132,7 @@
                       <v-btn color="indigo" class="button__next" @click="nextPage">Next</v-btn>
                       <v-select
                         v-model="perPage"
-                        :items="[7, 10, 15, 25]"
+                        :items=elementPagination
                         label="Elementos por página"
                         @input="changePerPage"
                         class="element__pagination"
@@ -179,6 +178,7 @@ export default {
       endDateMenu: false,
       loading: false,
       dialog: false,
+      elementPagination: [7, 10, 15, 25, 50, 100],
       tabs: [
         {
           name: 'Exceptions',
@@ -210,7 +210,7 @@ export default {
     formatIssueDate(value) {
       if (!value) return '';
       return format(value, 'dd/MM/yyyy HH:mm:ss.SSS');
-    },
+    }
   },
 
   computed: {
@@ -349,12 +349,8 @@ export default {
   width: 150px;
   margin-bottom: 50px;
 }
-
-.custom-row {
-  background: #386fb6 !important;
-}
 .custom-cell {
-  background: #cacaca;
+  background: #cacaca !important;
   color: #000;
 }
 
