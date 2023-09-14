@@ -31,97 +31,98 @@
     </v-app-bar>
 
     <!-- Menu desplegable -->
-    <div data-app>
-      <v-navigation-drawer
-        v-model="drawer"
-        temporary
-        absolute
-        color="#FDFEFE"
-        width="450px"
-      >
-        <h3 class="title__navbar">Búsqueda Avanzada</h3>
-        <v-row class="container__filter">
-          <v-col cols="12" md="6">
-            <v-text-field
-              v-model="idCompany"
-              label="idCompany"
-              outlined
-              clearable
-              class="company"
-            ></v-text-field>
-          </v-col>
+  <div data-app>
+    <v-navigation-drawer
+      v-model="drawer"
+      temporary
+      absolute
+      color="#FDFEFE"
+      width="450px"
+    >
+      <h3 class="title__navbar">Búsqueda Avanzada</h3>
+      <v-row class="container__filter">
+        
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="idCompany"
+            label="idCompany"
+            outlined
+            clearable
+            class="company"
+          ></v-text-field>
+        </v-col>
 
-          <v-col cols="12" md="6">
-            <v-text-field
-              v-model="idDevice"
-              label="idDevice"
-              outlined
-              clearable
-              class="device"
-            ></v-text-field>
-          </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="idDevice"
+            label="idDevice"
+            outlined
+            clearable
+            class="device"
+          ></v-text-field>
+        </v-col>
 
-          <!-- rango de fecha -->
-          <v-col cols="12">
-            <v-menu
-              ref="startDateMenu"
-              v-model="startDateMenu"
-              :close-on-content-click="false"
-              :nudge-width="200"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="dateRange"
-                  label="Rango de Fechas"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-on="on"
-                ></v-text-field>
-              </template>
-
-              <v-date-picker
+        <!-- rango de fecha -->
+        <v-col cols="12">
+          <v-menu
+            ref="startDateMenu"
+            v-model="startDateMenu"
+            :close-on-content-click="false"
+            :nudge-width="200"
+          >
+            <template v-slot:activator="{ on }">
+              <v-text-field
                 v-model="dateRange"
-                range
-                no-title
-                scrollable
-                color="light-blue lighten-1"
+                label="Rango de Fechas"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-on="on"
+              ></v-text-field>
+            </template>
+            
+            <v-date-picker
+              v-model="dateRange"
+              range
+              no-title
+              scrollable
+              color="light-blue lighten-1"
+            >
+              <v-btn color="light-blue lighten-1" @click="saveDateRange"
+                >Save</v-btn
               >
-                <v-btn color="light-blue lighten-1" @click="saveDateRange"
-                  >Save</v-btn
-                >
-                <v-btn color="deep-orange accent-2" @click="cancelDateRange"
-                  >Cancel</v-btn
-                >
-              </v-date-picker>
-            </v-menu>
-          </v-col>
-
-          <v-col cols="12" md="3">
-            <v-text-field
-              v-model="endpoint"
-              label="Endpoint"
-              outlined
-              clearable
-              color="white"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="12" md="3">
-            <v-row class="button__search">
-              <v-btn
-                :disabled="!isSearchDataComplete"
-                @click="search"
-                color="#68c6e8"
-                class="search"
-                width="100%"
+              <v-btn color="deep-orange accent-2" @click="cancelDateRange"
+                >Cancel</v-btn
               >
-                Buscar
-              </v-btn>
-            </v-row>
-          </v-col>
-        </v-row>
-      </v-navigation-drawer>
-    </div>
+            </v-date-picker>
+          </v-menu>
+        </v-col>
+
+        <v-col cols="12" md="3">
+          <v-text-field
+            v-model="endpoint"
+            label="Endpoint"
+            outlined
+            clearable
+            color="white"
+          ></v-text-field>
+        </v-col>
+
+        <v-col cols="12" md="3">
+          <v-row class="button__search">
+            <v-btn
+              :disabled="!isSearchDataComplete"
+              @click="search"
+              color="#68c6e8"
+              class="search"
+              width="100%"
+            >
+              Buscar
+            </v-btn>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-navigation-drawer>
+  </div>
 
     <!-- Tabla -->
     <v-container style="height: 1000px" fluid>
